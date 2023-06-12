@@ -261,3 +261,6 @@ BlogManagement/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
+
+.DS_Store
+BlogManagement.Blazor/.DS_Store
