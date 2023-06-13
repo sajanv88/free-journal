@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlogManagement.Entities;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace BlogManagement.Data;
 
 public class BlogManagementDbContext : AbpDbContext<BlogManagementDbContext>
 {
+    public DbSet<Post> Posts { get; set; }
     public BlogManagementDbContext(DbContextOptions<BlogManagementDbContext> options)
         : base(options)
     {
@@ -32,5 +34,9 @@ public class BlogManagementDbContext : AbpDbContext<BlogManagementDbContext>
         builder.ConfigureTenantManagement();
 
         /* Configure your own entities here */
+        builder.Entity<Post>(b => 
+        {
+            b.ToTable("posts");
+        });
     }
 }
