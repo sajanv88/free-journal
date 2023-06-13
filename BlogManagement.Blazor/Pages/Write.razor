@@ -1,52 +1,105 @@
 @page "/new/write"
 @layout AdminLayout
-@using PSC.Blazor.Components.MarkdownEditor
-@using PSC.Blazor.Components.MarkdownEditor.EventsArgs
 
 <link href="/_content/PSC.Blazor.Components.MarkdownEditor/css/easymde.min.css" rel="stylesheet" />
  
 
 <div class="col-md-12">
-    <div class="mb-5 d-flex align-items-center">
-        <div class="form-check flex-grow-1 ">
-            <input type="checkbox" class="form-check-input" id="enablePreview" checked="@IsPreview" onchange="@TogglePreview" />
-            <label for="enablePreview" class="form-check-label text-primary">Enable Preview</label>
+    <EditForm Model="@storyModel" OnSubmit="@HandleSubmit">
+       
+        <div class="mb-5 d-flex align-items-center">
+            <fieldset class="flex-grow-1">
+                <legend>Set your post status</legend>
+                <div class="form-check">
+                    <input type="radio" class="form-check-input" id="statusDraft" name="postStatus" value="draft" checked="@storyModel.IsDraft" onchange="@(() => @storyModel.updateStatus("draft"))" />
+                    <label for="statusDraft" class="form-check-label text-primary">Draft</label>
+                </div>
+                <div class="form-check ">
+                    <input type="radio" class="form-check-input" id="statusPublished" name="postStatus" value="publish" checked="@storyModel.IsPublished" onchange="@(() => @storyModel.updateStatus("publish"))" />
+                    <label for="statusPublished" class="form-check-label text-primary">Publish</label>
+                </div>
+            </fieldset>
+             <div class="mb-5 d-flex align-items-center">
+                <button class="btn btn-primary" type="submit">Save</button>
+             </div>
         </div>
-        <button class="btn btn-primary">Save</button>
-    </div>
-    <MarkdownEditor 
-        @bind-Value="@MarkdownValue" 
-        ValueHTMLChanged="@OnMarkdownValueHTMLChanged" />
+        <div class="mt-5 mb-5">
+            <input type="text" class="form-control bg-white border border-secondary" placeholder="Your post title" @bind-value="storyModel.Title" />
+        </div>
+
+         <MarkdownEditor 
+            ValueHTMLChanged="@OnMarkdownValueHTMLChanged"
+            Placeholder="Write your post">
+        
+        </MarkdownEditor>
+    </EditForm>
+
+   
 
 
-
-    @if (IsPreview) 
-    {
-        <hr />
-        <h3>Preview</h3>
-        @((MarkupString)MarkdownHtml)
-    }
+   
     
 </div>
 
 @code {
-    string MarkdownValue = "#Write your post";
-    string MarkdownHtml;
 
-    bool  IsPreview = false;
+    public class StoryModel 
+    {
+        public bool IsDraft {get; set;}
+        public bool IsPublished {get; set;}
+
+        public string Title {get; set;}
+
+        public string MarkdownValue {get; set;}
+
+        public void updateStatus(string status)
+        {
+            if (status == "draft") 
+            {
+                IsDraft = true;
+                IsPublished = false;
+            }else if (status == "publish")
+            {
+                IsPublished = true;
+                IsDraft = false;
+            }
+        }
+    }
+
+    EditContext? editContext;
+    
+  
+
+    bool IsPreview = false;
+    StoryModel storyModel = new StoryModel()
+    {
+        IsDraft =  true,
+        IsPublished = false
+    };
+
     Task OnMarkdownValueChanged(string value)
     {
+        
         return Task.CompletedTask;
     }
 
     Task OnMarkdownValueHTMLChanged(string value)
     {
-        MarkdownHtml = value;
+       
+        storyModel.MarkdownValue = value;
         return Task.CompletedTask;
     }
 
     void TogglePreview() 
     {
         IsPreview = !IsPreview;
+    }
+
+    async Task HandleSubmit()
+    {
+        Console.WriteLine($"Draft is {storyModel.IsDraft}");
+        Console.WriteLine($"Publish is {storyModel.IsPublished}");
+        Console.WriteLine($"Title is {storyModel.Title}");
+        Console.WriteLine($"MarkdownValue is {storyModel.MarkdownValue}");
     }
 }
