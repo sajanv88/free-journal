@@ -1,0 +1,35 @@
+@using Volo.Abp.AspNetCore.Components.Web.BasicTheme.Themes.Basic
+@inherits LayoutComponentBase
+@layout MainLayout
+
+@inject ICurrentUser CurrentUser
+
+@if (CurrentUser.IsAuthenticated)
+{
+    <section class="d-flex p-2">
+        <h3 class="flex-grow-1">Write a post</h3>
+        <button class="btn btn-success">Write</button>
+    </section>
+    <section>
+        <ul class="nav nav-tabs flex-column flex-md-row" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="#draft" aria-selected="true" role="tab">Draft</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="#published" aria-selected="true" role="tab">Published</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="#comments" aria-selected="true" role="tab">Comments</a>
+            </li>
+        </ul>
+    </section>
+
+    @Body
+}
+else
+{
+    <div>You are not authenticated to view this page</div>
+}
+
+
+
