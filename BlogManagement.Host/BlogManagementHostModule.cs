@@ -45,6 +45,7 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.Uow;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 
 namespace BlogManagement;
 
@@ -129,6 +130,10 @@ public class BlogManagementHostModule : AbpModule
             {
                 context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
             }
+            Configure<AbpAntiForgeryOptions>(options => 
+            {
+                options.AutoValidate = false;
+            });
 
             ConfigureAuthentication(context);
             ConfigureBundles();

@@ -5,8 +5,8 @@
  
 
 <div class="col-md-12">
-    <EditForm Model="@storyModel" OnSubmit="@HandleSubmit">
-       
+    <EditForm Model="@storyModel" OnSubmit="@HandleSubmitAsync">
+
         <div class="mb-5 d-flex align-items-center">
             <fieldset class="flex-grow-1">
                 <legend>Set your post status</legend>
@@ -20,7 +20,7 @@
                 </div>
             </fieldset>
              <div class="mb-5 d-flex align-items-center">
-                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn btn-primary" type="submit" disabled="@string.IsNullOrEmpty(storyModel.Title)">Save</button>
              </div>
         </div>
         <div class="mt-5 mb-5">
@@ -33,73 +33,4 @@
         
         </MarkdownEditor>
     </EditForm>
-
-   
-
-
-   
-    
 </div>
-
-@code {
-
-    public class StoryModel 
-    {
-        public bool IsDraft {get; set;}
-        public bool IsPublished {get; set;}
-
-        public string Title {get; set;}
-
-        public string MarkdownValue {get; set;}
-
-        public void updateStatus(string status)
-        {
-            if (status == "draft") 
-            {
-                IsDraft = true;
-                IsPublished = false;
-            }else if (status == "publish")
-            {
-                IsPublished = true;
-                IsDraft = false;
-            }
-        }
-    }
-
-    EditContext? editContext;
-    
-  
-
-    bool IsPreview = false;
-    StoryModel storyModel = new StoryModel()
-    {
-        IsDraft =  true,
-        IsPublished = false
-    };
-
-    Task OnMarkdownValueChanged(string value)
-    {
-        
-        return Task.CompletedTask;
-    }
-
-    Task OnMarkdownValueHTMLChanged(string value)
-    {
-       
-        storyModel.MarkdownValue = value;
-        return Task.CompletedTask;
-    }
-
-    void TogglePreview() 
-    {
-        IsPreview = !IsPreview;
-    }
-
-    async Task HandleSubmit()
-    {
-        Console.WriteLine($"Draft is {storyModel.IsDraft}");
-        Console.WriteLine($"Publish is {storyModel.IsPublished}");
-        Console.WriteLine($"Title is {storyModel.Title}");
-        Console.WriteLine($"MarkdownValue is {storyModel.MarkdownValue}");
-    }
-}
