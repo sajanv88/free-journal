@@ -10,4 +10,10 @@ public class CreatePostDto
 
     [JsonPropertyName("created_by")]
     public Guid CreatedBy {get; set;}
+
+    [JsonPropertyName("is_published")]
+    public bool IsPublished {get; set;}
+
+    [JsonPropertyName("is_draft")]
+    public bool IsDraft {get; set;}
 }

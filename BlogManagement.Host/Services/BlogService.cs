@@ -5,6 +5,7 @@ using BlogManagement.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Components.Web.BasicTheme.Themes.Basic;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BlogManagement.Services;
 public class BlogService : ApplicationService, IBlogService
@@ -24,20 +25,29 @@ public class BlogService : ApplicationService, IBlogService
             Title = result.Title, 
             Id = result.Id, 
             PostContent = result.PostContent, 
-            CreatedBy = result.CreatedBy
+            CreatedBy = result.CreatedBy,
+            IsPublished = result.IsPublished,
+            IsDraft = result.IsDraft,
         };
     }
 
     public async Task<ReadPostDto> CreatePostAsync(CreatePostDto post)
     {
-        var newPostItem = new Post { Title = post.Title, PostContent = post.PostContent, CreatedBy = post.CreatedBy };
+        var newPostItem = new Post { Title = post.Title, PostContent = post.PostContent, CreatedBy = post.CreatedBy, IsPublished = post.IsPublished, IsDraft = post.IsDraft };
+        if (post.IsPublished && post.IsDraft)
+        {
+            throw new BusinessException("Contract doesn't match. Post must contain status. Either published or draft set to true.");
+        }
+
         var result = await _postRepository.InsertAsync(newPostItem);
         return new ReadPostDto 
         {
             Title = result.Title, 
             Id = result.Id, 
             PostContent = result.PostContent, 
-            CreatedBy = result.CreatedBy
+            CreatedBy = result.CreatedBy,
+            IsPublished = result.IsPublished,
+            IsDraft = result.IsDraft,
         };
        
     }
@@ -55,7 +65,9 @@ public class BlogService : ApplicationService, IBlogService
             Title = p.Title,
             PostContent = p.PostContent,
             Id = p.Id,
-            CreatedBy = p.CreatedBy
+            CreatedBy = p.CreatedBy,
+            IsPublished = p.IsPublished,
+            IsDraft = p.IsDraft,
         }).ToList();
     }
 
@@ -70,7 +82,9 @@ public class BlogService : ApplicationService, IBlogService
             Title = result.Title, 
             Id = result.Id, 
             PostContent = result.PostContent, 
-            CreatedBy = result.CreatedBy
+            CreatedBy = result.CreatedBy,
+            IsPublished = result.IsPublished,
+            IsDraft = result.IsDraft,
         };
     }
 }

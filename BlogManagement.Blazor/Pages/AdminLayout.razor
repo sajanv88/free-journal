@@ -1,0 +1,19 @@
+@using Volo.Abp.AspNetCore.Components.Web.BasicTheme.Themes.Basic
+@inherits LayoutComponentBase
+@layout MainLayout
+@namespace BlogManagement.Layout
+
+@inject ICurrentUser CurrentUser
+
+@if (CurrentUser.IsAuthenticated)
+{
+    @Body
+}
+else
+{
+  
+    <div class="unauthorised-page d-flex justify-content-center align-items-center">You are not authenticated to view this page</div>
+}
+
+
+

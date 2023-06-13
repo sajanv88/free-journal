@@ -1,3 +1,52 @@
 @page "/new/write"
+@layout AdminLayout
+@using PSC.Blazor.Components.MarkdownEditor
+@using PSC.Blazor.Components.MarkdownEditor.EventsArgs
 
-<h1>I am write</h1>
+<link href="/_content/PSC.Blazor.Components.MarkdownEditor/css/easymde.min.css" rel="stylesheet" />
+ 
+
+<div class="col-md-12">
+    <div class="mb-5 d-flex align-items-center">
+        <div class="form-check flex-grow-1 ">
+            <input type="checkbox" class="form-check-input" id="enablePreview" checked="@IsPreview" onchange="@TogglePreview" />
+            <label for="enablePreview" class="form-check-label text-primary">Enable Preview</label>
+        </div>
+        <button class="btn btn-primary">Save</button>
+    </div>
+    <MarkdownEditor 
+        @bind-Value="@MarkdownValue" 
+        ValueHTMLChanged="@OnMarkdownValueHTMLChanged" />
+
+
+
+    @if (IsPreview) 
+    {
+        <hr />
+        <h3>Preview</h3>
+        @((MarkupString)MarkdownHtml)
+    }
+    
+</div>
+
+@code {
+    string MarkdownValue = "#Write your post";
+    string MarkdownHtml;
+
+    bool  IsPreview = false;
+    Task OnMarkdownValueChanged(string value)
+    {
+        return Task.CompletedTask;
+    }
+
+    Task OnMarkdownValueHTMLChanged(string value)
+    {
+        MarkdownHtml = value;
+        return Task.CompletedTask;
+    }
+
+    void TogglePreview() 
+    {
+        IsPreview = !IsPreview;
+    }
+}
