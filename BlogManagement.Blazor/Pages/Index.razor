@@ -1,7 +1,59 @@
 ﻿@page "/"
+@page "/{tab}"
+@inject NavigationManager Navigation
 @inherits BlogManagementComponentBase
 @layout BlogLayout
 
+<section class="d-flex p-2">
+        <h3 class="flex-grow-1">Write a post</h3>
+        <a class="btn btn-success" href="/new/write">Write</a>
+    </section>
+<section>
+    <ul class="nav nav-tabs flex-column flex-md-row" role="tablist">
+        @foreach (var route in TabRoutes) 
+        {
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="@route.Path" aria-selected="@route.IsActive" role="tab">@route.Name</a>
+            </li>
+        }
+        
+     
+    </ul>
+
+    <h1>@Tab</h1>
+</section>
+
 @code {
+    [Parameter]
+    public string Tab {get; set; }
+
+    public List<TabRoute> TabRoutes = new List<TabRoute>(3)
+        {
+            new TabRoute("Draft", "/draft", true),
+            new TabRoute("Published", "/published", false),
+            new TabRoute("Comments", "/comments", false),
+        };
+    
+    protected override void OnInitialized() 
+    {
+        if (Tab == null) {
+            var defaultRoute = TabRoutes.First<TabRoute>().Name;
+            Navigation.NavigateTo(defaultRoute);
+        }
+    }
+    
+
+    public class TabRoute 
+    {
+        public string Name {get; set;}
+        public string Path {get; set;}
+        public bool IsActive {get; set;}
+        public TabRoute(string name, string path, bool isActive)
+        {
+            Name = name;
+            Path = path;
+            IsActive = isActive;
+        }
+    }
 
 }
