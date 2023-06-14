@@ -1,6 +1,7 @@
 ﻿@page "/"
 @page "/{tab}"
 @inject NavigationManager Navigation
+
 @inherits BlogManagementComponentBase
 @layout AdminLayout
 
@@ -10,38 +11,75 @@
     </section>
 <section>
     <ul class="nav nav-tabs flex-column flex-md-row" role="tablist">
-        @foreach (var route in TabRoutes) 
+        @foreach (var route in _tabRoutes) 
         {
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" data-bs-toggle="tab" href="@route.Path" aria-selected="@route.IsActive" role="tab">@route.Name</a>
+                <a class="@(route.IsActive ? "border-success nav-link active" : "nav-link active")"
+                   data-bs-toggle="tab"
+                   href="@route.Path"
+                   aria-selected="@route.IsActive"
+                   role="tab"
+                   >@route.Name</a>
             </li>
         }
-        
-     
     </ul>
-
-    <h1>@Tab</h1>
+    
+    @if (Tab == "draft")
+    {
+        <div class="container-md">
+        
+        </div>
+    }
+    @if (Tab == "published")
+    {
+        <div class="container-md">
+         
+        </div>
+    }
+    
+    @if (Tab == "comments")
+    {
+        <div class="container-md">
+         
+        </div>
+    }
+    
+    
 </section>
 
 @code {
-    [Parameter]
-    public string Tab {get; set; }
 
-    public List<TabRoute> TabRoutes = new List<TabRoute>(3)
+    [Parameter]
+    public string? Tab { get; set; }
+
+    private readonly List<TabRoute> _tabRoutes = new List<TabRoute>()
         {
             new TabRoute("Draft", "/draft", true),
             new TabRoute("Published", "/published", false),
             new TabRoute("Comments", "/comments", false),
         };
     
-    protected override void OnInitialized() 
+    protected override void OnInitialized()
     {
-        if (Tab == null) {
-            var defaultRoute = TabRoutes.First<TabRoute>().Name;
-            Navigation.NavigateTo(defaultRoute);
-        }
+        if (Tab != null) return;
+        var defaultRoute = _tabRoutes.First<TabRoute>().Name;
+        Navigation.NavigateTo(defaultRoute.ToLower());
     }
     
+    protected override void OnParametersSet()
+    {
+        GetSelectedTab();
+    }
+
+    private void GetSelectedTab()
+    {   
+        _tabRoutes.ForEach(r => r.IsActive = false);
+      
+        _tabRoutes
+            .Where(r => r.Name.ToLower() == Tab)
+            .ToList()
+            .ForEach(r => r.IsActive = true);
+    }
 
     public class TabRoute 
     {

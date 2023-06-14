@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
-using Volo.Abp.AspNetCore.Components.Web;
 using Volo.Abp.Users;
 
 namespace BlogManagement.Pages;
@@ -37,18 +36,12 @@ public partial class Write: ComponentBase
 
     private HttpClient _http;
     private CurrentUser _user;
-    private CookieService _cookie;
 
-    private const string AntiForgeryCookieName = "XSRF-TOKEN";
 
-    private const string AntiForgeryHeaderName = "RequestVerificationToken";
-
-    public Write(HttpClient http, CurrentUser user, CookieService cookie)
+    public Write(HttpClient http, CurrentUser user)
     {
         _http = http;
         _user = user;
-        _cookie = cookie;
-        
     }
 
     public Task OnMarkdownValueHTMLChanged(string value)

@@ -1,0 +1,9 @@
+<div class="render-post">
+    <h1>@Post?.Title</h1>
+    @if (!string.IsNullOrEmpty(Post?.PostContent))
+    {
+        <div>@((MarkupString)Post.PostContent)</div>
+    }
+   
+</div>
+
