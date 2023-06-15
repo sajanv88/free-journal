@@ -7,6 +7,7 @@ using BlogManagement.Data;
 using BlogManagement.Localization;
 using BlogManagement;
 using BlogManagement.MultiTenancy;
+using BlogManagement.Repository;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Account;
@@ -125,7 +126,7 @@ public class BlogManagementHostModule : AbpModule
         {
             var hostingEnvironment = context.Services.GetHostingEnvironment();
             var configuration = context.Services.GetConfiguration();
-
+                
             if (hostingEnvironment.IsDevelopment())
             {
                 context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
@@ -134,7 +135,7 @@ public class BlogManagementHostModule : AbpModule
             {
                 options.AutoValidate = false;
             });
-
+            
             ConfigureAuthentication(context);
             ConfigureBundles();
             ConfigureMultiTenancy();

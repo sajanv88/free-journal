@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
@@ -37,6 +38,8 @@ public class BlogManagementDbContext : AbpDbContext<BlogManagementDbContext>
         builder.Entity<Post>(b => 
         {
             b.ToTable("posts");
+        
+            b.ConfigureByConvention();
         });
     }
 }

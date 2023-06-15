@@ -2,10 +2,10 @@ using Volo.Abp.Application.Services;
 using BlogManagement.Dtos;
 using BlogManagement.Services.Dtos;
 using BlogManagement.Entities;
+using BlogManagement.Repository;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp;
-
-
+using Volo.Abp.Application.Dtos;
 
 
 namespace BlogManagement.Services;
@@ -20,7 +20,7 @@ public class BlogService : ApplicationService, IBlogService
 
     public async Task<ReadPostDto> GetPostAsync(Guid Id) 
     {
-        var result =  await _postRepository.GetAsync(p => p.Id == Id) ?? throw new BusinessException("Post not found");
+        var result =  await _postRepository.GetAsync(Id) ?? throw new BusinessException("Post not found");
         return new ReadPostDto 
         {
             Title = result.Title, 
@@ -58,18 +58,27 @@ public class BlogService : ApplicationService, IBlogService
         await _postRepository.DeleteAsync(Id);
     }
 
-    public async Task<List<ReadPostDto>> GetPostsAsync()
+    public async Task<PagedResultDto<ReadPostDto>> GetPostsAsync(GetPaginatedBlog input)
     {
-       var posts = await _postRepository.GetListAsync();
-        return posts.Select(p => new ReadPostDto 
-        { 
-            Title = p.Title,
-            PostContent = p.PostContent,
-            Id = p.Id,
-            CreatedBy = p.CreatedBy,
-            IsPublished = p.IsPublished,
-            IsDraft = p.IsDraft,
-        }).ToList();
+        var list = await _postRepository.GetPagedListAsync(input.SkipCount, input.MaxResultCount, input.Sorting);
+        if (input.Filter?.IsNullOrWhiteSpace() != null)
+        {
+            if (input.Filter?.ToLower() == "draft")
+            {
+                list = list.Where(p => p.IsDraft).ToList();
+            }else if (input.Filter?.ToLower() == "published")
+            {
+                list = list.Where(p => p.IsPublished).ToList();
+            }
+           
+        }
+        
+        var count = list.Count;
+  
+        return new PagedResultDto<ReadPostDto>(
+            count,
+            ObjectMapper.Map<List<Post>, List<ReadPostDto>>(list)
+        );
     }
 
     public async Task<ReadPostDto> UpdatePostAsync(CreatePostDto post, Guid Id)

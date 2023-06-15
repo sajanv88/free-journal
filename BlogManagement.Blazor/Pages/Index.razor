@@ -10,7 +10,7 @@
         <a class="btn btn-success" href="/new/write">Write</a>
     </section>
 <section>
-    <ul class="nav nav-tabs flex-column flex-md-row" role="tablist">
+    <ul class="nav nav-tabs flex-column flex-md-row mb-5" role="tablist">
         @foreach (var route in _tabRoutes) 
         {
             <li class="nav-item" role="presentation">
@@ -70,6 +70,7 @@
     {
         GetSelectedTab();
     }
+    
 
     private void GetSelectedTab()
     {   
@@ -81,6 +82,7 @@
             .ForEach(r => r.IsActive = true);
     }
 
+    
     public class TabRoute 
     {
         public string Name {get; set;}
