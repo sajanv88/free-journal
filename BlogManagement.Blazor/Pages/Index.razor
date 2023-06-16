@@ -2,6 +2,7 @@
 @page "/{tab}"
 @inject NavigationManager Navigation
 
+
 @inherits BlogManagementComponentBase
 @layout AdminLayout
 
@@ -24,31 +25,13 @@
         }
     </ul>
     
-    @if (Tab == "draft")
-    {
-        <div class="container-md">
-        
-        </div>
-    }
-    @if (Tab == "published")
-    {
-        <div class="container-md">
-         
-        </div>
-    }
-    
-    @if (Tab == "comments")
-    {
-        <div class="container-md">
-         
-        </div>
-    }
-    
+    <RenderPost SelectedTab="@Tab" />
+
     
 </section>
 
 @code {
-
+    
     [Parameter]
     public string? Tab { get; set; }
 
@@ -59,20 +42,22 @@
             new TabRoute("Comments", "/comments", false),
         };
     
-    protected override void OnInitialized()
+    protected override  void OnInitialized()
     {
+       
         if (Tab != null) return;
         var defaultRoute = _tabRoutes.First<TabRoute>().Name;
         Navigation.NavigateTo(defaultRoute.ToLower());
     }
     
-    protected override void OnParametersSet()
+    protected override async void OnParametersSet()
     {
-        GetSelectedTab();
+      
+        await GetSelectedTab();
+        
     }
-    
 
-    private void GetSelectedTab()
+    private async Task GetSelectedTab()
     {   
         _tabRoutes.ForEach(r => r.IsActive = false);
       
@@ -80,6 +65,7 @@
             .Where(r => r.Name.ToLower() == Tab)
             .ToList()
             .ForEach(r => r.IsActive = true);
+      
     }
 
     

@@ -7,7 +7,7 @@ using BlogManagement.Data;
 using BlogManagement.Localization;
 using BlogManagement;
 using BlogManagement.MultiTenancy;
-using BlogManagement.Repository;
+
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Account;

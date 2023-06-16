@@ -1,0 +1,14 @@
+.render-post{
+
+   
+}
+
+.render-post__items {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.render-post__item {
+    border-bottom: 1px solid red;
+    padding: 1rem;
+}

@@ -1,9 +1,24 @@
 <div class="render-post">
-    <h1>@Post?.Title</h1>
-    @if (!string.IsNullOrEmpty(Post?.PostContent))
+    <h1>I am render post component</h1>
+    @if (_items == null)
     {
-        <div>@((MarkupString)Post.PostContent)</div>
+        <span>Loading...</span>
+    }
+    else
+    {
+        <div class="render-post__items">
+        @foreach (var item in _items.Items)
+        {
+            <div class="render-post__item">
+                <h1>Some title @item?.Title</h1></div>
+        }
+        </div>
     }
    
+    @* @if (!string.IsNullOrEmpty(Post?.PostContent)) *@
+    @* { *@
+    @*     <div>@((MarkupString)Post.PostContent)</div> *@
+    @* } *@
+
 </div>
 
