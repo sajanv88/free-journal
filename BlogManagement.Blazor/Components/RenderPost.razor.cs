@@ -15,6 +15,8 @@ public partial class RenderPost: ComponentBase
     [Parameter] 
     public string SelectedTab { get; set; }
 
+ 
+
     public RenderPost(HttpClient http)
     {
         _http = http;
@@ -26,4 +28,10 @@ public partial class RenderPost: ComponentBase
         _items = await _http.GetFromJsonAsync<PagedResultDto<ReadPostDto>>($"api/app/blog/posts?Filter={SelectedTab}");
       
     }
+
+    private async Task onRefresh()
+    {
+        _items = await _http.GetFromJsonAsync<PagedResultDto<ReadPostDto>>($"api/app/blog/posts?Filter={SelectedTab}");
+    }
+    
 }

@@ -1,0 +1,51 @@
+@using BlogManagement.Dtos
+@inject HttpClient http;
+<Button Color="Color.Primary" Clicked="@ShowModal">Delete</Button>
+<Modal @ref="modalRef">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Are you sure?</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>@Item.Title</FieldLabel>
+            </Field>
+            <Field>
+                <FieldLabel>This operation cannot be restored.</FieldLabel>
+              
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Cancel</Button>
+            <Button Color="Color.Primary" Clicked="@DeletePost">I Know</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+@code{
+
+    [Parameter]
+    public ReadPostDto Item { get; set; }
+    
+    [Parameter]
+    public EventCallback OnDeleted { get; set; }
+    
+    private Modal modalRef;
+
+    private  Task ShowModal()
+    {
+        return modalRef.Show();
+    }
+
+    private Task HideModal()
+    {
+        return modalRef.Hide();
+    }
+
+    private async Task DeletePost()
+    {
+        await http.DeleteAsync($"api/app/blog/post/{Item.Id}");
+        await OnDeleted.InvokeAsync();
+        await HideModal();
+    }
+}

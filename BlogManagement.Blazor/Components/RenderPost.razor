@@ -1,24 +1,34 @@
 <div class="render-post">
-    <h1>I am render post component</h1>
+   
     @if (_items == null)
     {
-        <span>Loading...</span>
+        <Loading />
+    }
+    else if (_items.Items.Count == 0)
+    {
+        <NotFound />
     }
     else
     {
-        <div class="render-post__items">
-        @foreach (var item in _items.Items)
-        {
-            <div class="render-post__item">
-                <h1>Some title @item?.Title</h1></div>
-        }
-        </div>
+        <section class="render-post__items mt-3 mb-3">
+            @foreach (var item in _items.Items)
+            {
+                var content = !string.IsNullOrEmpty(item?.PostContent) ? (MarkupString)item.PostContent : (MarkupString?)null;
+                <section class="render-post__item pt-3 pb-3">
+                    <div class="d-flex">
+                        <h1 class="h1 text-truncate flex-grow-1" aria-details="@item?.Title"> @item?.Title</h1>
+                        <PostDeleteDialog Item="item" OnDeleted="@onRefresh"/>
+                    </div>
+                    @if (content != null)
+                    {
+                        <article class="lead" aria-description="@content">@content</article>
+                    }
+                </section>
+            }
+        </section>
+        
     }
-   
-    @* @if (!string.IsNullOrEmpty(Post?.PostContent)) *@
-    @* { *@
-    @*     <div>@((MarkupString)Post.PostContent)</div> *@
-    @* } *@
+
 
 </div>
 

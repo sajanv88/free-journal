@@ -15,19 +15,21 @@
         @foreach (var route in _tabRoutes) 
         {
             <li class="nav-item" role="presentation">
-                <a class="@(route.IsActive ? "border-success nav-link active" : "nav-link active")"
+                <a class="@(route.IsActive ? "nav-link active" : "nav-link ")"
                    data-bs-toggle="tab"
                    href="@route.Path"
                    aria-selected="@route.IsActive"
+                   id="@route.Name.ToLower()"
                    role="tab"
-                   >@route.Name</a>
+                >@route.Name</a>
             </li>
         }
     </ul>
-    
-    <RenderPost SelectedTab="@Tab" />
-
-    
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="@Tab?.ToLower()" role="tabpanel" aria-labelledby="@Tab?.ToLower()">
+              <RenderPost SelectedTab="@Tab" />
+        </div>
+    </div>
 </section>
 
 @code {
@@ -57,7 +59,7 @@
         
     }
 
-    private async Task GetSelectedTab()
+    private Task GetSelectedTab()
     {   
         _tabRoutes.ForEach(r => r.IsActive = false);
       
@@ -65,7 +67,7 @@
             .Where(r => r.Name.ToLower() == Tab)
             .ToList()
             .ForEach(r => r.IsActive = true);
-      
+        return Task.CompletedTask;
     }
 
     
