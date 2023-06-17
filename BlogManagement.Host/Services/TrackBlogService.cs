@@ -7,11 +7,11 @@ using Volo.Abp.Domain.Repositories;
 
 namespace BlogManagement.Services
 {
-    public class TrackBlogBlogService: ApplicationService, ITrackBlogService
+    public class TrackBlogService: ApplicationService, ITrackBlogService
     {
         private readonly IRepository<Post, Guid> _postRepository;
     
-        public TrackBlogBlogService(IRepository<Post, Guid> postRepository)
+        public TrackBlogService(IRepository<Post, Guid> postRepository)
         {
             _postRepository = postRepository;
         }

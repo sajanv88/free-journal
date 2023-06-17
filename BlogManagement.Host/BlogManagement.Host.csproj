@@ -72,7 +72,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BlogManagement.Blazor\BlogManagement.Blazor.csproj" />
     <ProjectReference Include="..\BlogManagement.Contracts\BlogManagement.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
